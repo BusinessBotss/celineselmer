@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Celine Selmer — Digital Diary</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --cream: #FAF7F2;
+    --ivory: #F5F0E8;
+    --sand: #E8DDD0;
+    --beige: #D4C5B0;
+    --warm-taupe: #C2AF96;
+    --champagne: #E8D5BA;
+    --nude: #DCC8AE;
+    --espresso: #3D2E22;
+    --warm-gray: #6B5C50;
+    --soft-brown: #8B7260;
+    --accent: #C9A87C;
+    --white: #FFFDFB;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--cream);
+    color: var(--espresso);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+  }
+
+  /* ── LOADER ── */
+  #loader {
+    position: fixed; inset: 0; background: var(--cream);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 9999; transition: opacity 0.8s ease, visibility 0.8s ease;
+  }
+  #loader.hidden { opacity: 0; visibility: hidden; }
+  .loader-inner {
+    text-align: center;
+  }
+  .loader-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2rem, 8vw, 3.5rem);
+    font-weight: 300;
+    letter-spacing: 0.15em;
+    color: var(--espresso);
+    opacity: 0;
+    animation: fadeInUp 1s ease 0.3s forwards;
+  }
+  .loader-line {
+    width: 0; height: 1px; background: var(--accent);
+    margin: 1rem auto; animation: expandLine 1.2s ease 0.8s forwards;
+  }
+  .loader-sub {
+    font-size: 0.75rem; letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--soft-brown); opacity: 0;
+    animation: fadeInUp 1s ease 1s forwards;
+  }
+  @keyframes expandLine { to { width: 120px; } }
+
+  /* ── PARTICLES ── */
+  .particle {
+    position: fixed; pointer-events: none; border-radius: 50%;
+    background: var(--accent); opacity: 0; z-index: 0;
+    animation: float var(--dur, 8s) ease-in-out var(--delay, 0s) infinite;
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0) scale(1); opacity: 0; }
+    20% { opacity: 0.15; }
+    50% { transform: translateY(-40px) scale(1.1); opacity: 0.08; }
+    80% { opacity: 0.12; }
+  }
+
+  /* ── HERO ── */
+  #hero {
+    position: relative; height: 100svh; min-height: 600px;
+    overflow: hidden; display: flex; align-items: flex-end;
+  }
+  .hero-img {
+    position: absolute; inset: 0;
+    background-image: url('https://res.cloudinary.com/dqje367sj/image/upload/v1778695177/26CD62D4-752C-4E08-901A-FCDC5FF3019F_czsk4d.jpg');
+    background-size: cover; background-position: center 20%;
+    transform: scale(1.05);
+    transition: transform 12s ease;
+  }
+  .hero-img.loaded { transform: scale(1); }
+  .hero-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(
+      to bottom,
+      rgba(250, 247, 242, 0.05) 0%,
+      rgba(250, 247, 242, 0.1) 30%,
+      rgba(212, 197, 176, 0.35) 60%,
+      rgba(61, 46, 34, 0.7) 100%
+    );
+  }
+  .hero-content {
+    position: relative; z-index: 2;
+    width: 100%; padding: 3rem 2rem 4rem;
+    text-align: center;
+  }
+  .hero-badge {
+    display: inline-block;
+    background: rgba(250,247,242,0.15);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(250,247,242,0.25);
+    border-radius: 100px;
+    padding: 0.4rem 1.2rem;
+    font-size: 0.7rem; letter-spacing: 0.25em; text-transform: uppercase;
+    color: rgba(255,253,251,0.9);
+    margin-bottom: 1.2rem;
+    opacity: 0; animation: fadeInUp 1s ease 0.3s forwards;
+  }
+  .hero-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(3rem, 12vw, 5.5rem);
+    font-weight: 300;
+    color: var(--white);
+    line-height: 1;
+    letter-spacing: 0.02em;
+    opacity: 0; animation: fadeInUp 1s ease 0.5s forwards;
+  }
+  .hero-handle {
+    font-size: 0.8rem; letter-spacing: 0.2em;
+    color: rgba(255,253,251,0.65);
+    margin: 0.8rem 0 1.5rem;
+    opacity: 0; animation: fadeInUp 1s ease 0.7s forwards;
+  }
+  .hero-tagline {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.3rem, 5vw, 2rem);
+    font-style: italic; font-weight: 300;
+    color: rgba(255,253,251,0.92);
+    margin-bottom: 0.75rem;
+    opacity: 0; animation: fadeInUp 1s ease 0.9s forwards;
+  }
+  .hero-sub {
+    font-size: 0.75rem; letter-spacing: 0.12em;
+    color: rgba(255,253,251,0.55);
+    max-width: 320px; margin: 0 auto 2rem;
+    line-height: 1.8;
+    opacity: 0; animation: fadeInUp 1s ease 1.1s forwards;
+  }
+  .hero-meta {
+    display: flex; align-items: center; justify-content: center; gap: 1.5rem;
+    flex-wrap: wrap;
+    opacity: 0; animation: fadeInUp 1s ease 1.3s forwards;
+  }
+  .hero-pill {
+    background: rgba(250,247,242,0.12);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(250,247,242,0.2);
+    border-radius: 100px;
+    padding: 0.5rem 1.2rem;
+    font-size: 0.72rem; letter-spacing: 0.15em; text-transform: uppercase;
+    color: rgba(255,253,251,0.85);
+  }
+  .hero-scroll {
+    position: absolute; bottom: 1.5rem; left: 50%; transform: translateX(-50%);
+    z-index: 2;
+    display: flex; flex-direction: column; align-items: center; gap: 0.4rem;
+    opacity: 0; animation: fadeInUp 1s ease 1.6s forwards;
+  }
+  .hero-scroll span {
+    font-size: 0.6rem; letter-spacing: 0.25em; text-transform: uppercase;
+    color: rgba(255,253,251,0.4);
+  }
+  .scroll-dot {
+    width: 1px; height: 40px; background: rgba(255,253,251,0.3);
+    position: relative; overflow: hidden;
+  }
+  .scroll-dot::after {
+    content: ''; position: absolute; top: -100%; left: 0;
+    width: 100%; height: 50%;
+    background: rgba(255,253,251,0.8);
+    animation: scrollDown 2s ease infinite;
+  }
+  @keyframes scrollDown { to { top: 200%; } }
+
+  /* ── STATS ── */
+  #stats {
+    padding: 4rem 1.5rem;
+    background: var(--ivory);
+  }
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem; max-width: 500px; margin: 0 auto;
+  }
+  .stat-card {
+    background: rgba(255,253,251,0.8);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(212,197,176,0.4);
+    border-radius: 20px;
+    padding: 1.5rem 1rem;
+    text-align: center;
+    box-shadow: 0 4px 24px rgba(61,46,34,0.06);
+    opacity: 0; transform: translateY(20px);
+    transition: opacity 0.7s ease, transform 0.7s ease, box-shadow 0.3s ease;
+  }
+  .stat-card.visible { opacity: 1; transform: translateY(0); }
+  .stat-card:hover { box-shadow: 0 8px 40px rgba(61,46,34,0.1); }
+  .stat-icon {
+    font-size: 1.4rem; margin-bottom: 0.5rem;
+  }
+  .stat-number {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.8rem; font-weight: 500;
+    color: var(--espresso);
+    line-height: 1;
+  }
+  .stat-label {
+    font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--soft-brown); margin-top: 0.3rem;
+  }
+
+  /* ── SECTION HEADERS ── */
+  .section-header {
+    text-align: center; margin-bottom: 2.5rem;
+    opacity: 0; transform: translateY(16px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .section-header.visible { opacity: 1; transform: translateY(0); }
+  .section-eyebrow {
+    font-size: 0.65rem; letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 0.6rem; display: block;
+  }
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2rem, 7vw, 3rem);
+    font-weight: 300; line-height: 1.1;
+    color: var(--espresso);
+  }
+  .section-divider {
+    width: 40px; height: 1px; background: var(--accent);
+    margin: 1rem auto 0;
+  }
+
+  /* ── LINKS ── */
+  #links {
+    padding: 4rem 1.5rem;
+    background: var(--cream);
+  }
+  .links-stack {
+    max-width: 480px; margin: 0 auto;
+    display: flex; flex-direction: column; gap: 1rem;
+  }
+  .link-card {
+    display: flex; align-items: center; gap: 1.2rem;
+    background: var(--white);
+    border: 1px solid rgba(212,197,176,0.4);
+    border-radius: 18px;
+    padding: 1.2rem 1.5rem;
+    text-decoration: none;
+    color: var(--espresso);
+    box-shadow: 0 2px 16px rgba(61,46,34,0.05);
+    transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    opacity: 0; transform: translateX(-20px);
+    position: relative; overflow: hidden;
+  }
+  .link-card::before {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(135deg, var(--champagne), var(--sand));
+    opacity: 0; transition: opacity 0.35s ease;
+  }
+  .link-card:hover { transform: translateY(-4px) scale(1.01); box-shadow: 0 12px 40px rgba(61,46,34,0.12); }
+  .link-card:hover::before { opacity: 0.4; }
+  .link-card.visible { opacity: 1; transform: translateX(0); }
+  .link-emoji {
+    font-size: 1.6rem; position: relative; z-index: 1;
+    width: 48px; height: 48px;
+    background: var(--ivory);
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .link-text { position: relative; z-index: 1; flex: 1; }
+  .link-title {
+    font-weight: 500; font-size: 0.95rem; color: var(--espresso);
+    display: block; margin-bottom: 0.2rem;
+  }
+  .link-desc {
+    font-size: 0.72rem; color: var(--soft-brown); letter-spacing: 0.05em;
+  }
+  .link-arrow {
+    position: relative; z-index: 1;
+    color: var(--accent); font-size: 1.1rem;
+    transition: transform 0.3s ease;
+  }
+  .link-card:hover .link-arrow { transform: translateX(4px); }
+
+  .link-card.whatsapp { background: linear-gradient(135deg, #F7F3EE, #EFE8DF); border-color: var(--nude); }
+  .link-card.whatsapp::before { background: linear-gradient(135deg, var(--champagne), #D4B896); }
+
+  /* ── MINDSET ── */
+  #mindset {
+    padding: 5rem 1.5rem;
+    background: var(--ivory);
+    overflow: hidden;
+  }
+  .mindset-inner {
+    max-width: 500px; margin: 0 auto;
+  }
+  .mindset-quote-wrap {
+    position: relative; margin-bottom: 3rem;
+    opacity: 0; transform: translateY(20px);
+    transition: opacity 0.9s ease, transform 0.9s ease;
+  }
+  .mindset-quote-wrap.visible { opacity: 1; transform: translateY(0); }
+  .quote-mark {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 8rem; line-height: 1;
+    color: var(--sand); position: absolute; top: -2rem; left: -1rem;
+    pointer-events: none; user-select: none;
+  }
+  .mindset-quote {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.4rem, 5vw, 2rem);
+    font-style: italic; font-weight: 300;
+    color: var(--espresso); line-height: 1.4;
+    padding-left: 1.5rem;
+    position: relative; z-index: 1;
+  }
+  .mindset-body {
+    opacity: 0; transform: translateY(20px);
+    transition: opacity 0.9s ease 0.2s, transform 0.9s ease 0.2s;
+  }
+  .mindset-body.visible { opacity: 1; transform: translateY(0); }
+  .mindset-text {
+    font-size: 0.9rem; line-height: 1.9; color: var(--warm-gray);
+    margin-bottom: 1.5rem;
+  }
+  .mindset-tags {
+    display: flex; flex-wrap: wrap; gap: 0.5rem;
+  }
+  .mindset-tag {
+    background: rgba(212,197,176,0.3);
+    border: 1px solid rgba(212,197,176,0.5);
+    border-radius: 100px;
+    padding: 0.35rem 0.9rem;
+    font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--soft-brown);
+  }
+
+  /* ── GALLERY ── */
+  #gallery {
+    padding: 4rem 1rem;
+    background: var(--cream);
+  }
+  .gallery-grid {
+    columns: 2; column-gap: 0.75rem;
+    max-width: 540px; margin: 0 auto;
+  }
+  .gallery-item {
+    break-inside: avoid; margin-bottom: 0.75rem;
+    border-radius: 16px; overflow: hidden;
+    position: relative; cursor: pointer;
+    opacity: 0; transform: scale(0.95);
+    transition: opacity 0.7s ease, transform 0.7s ease, box-shadow 0.3s ease;
+  }
+  .gallery-item.visible { opacity: 1; transform: scale(1); }
+  .gallery-item img {
+    width: 100%; display: block;
+    transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    filter: saturate(0.95) brightness(1.02);
+  }
+  .gallery-item:hover img { transform: scale(1.07); }
+  .gallery-item:hover { box-shadow: 0 12px 40px rgba(61,46,34,0.18); }
+  .gallery-item::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(61,46,34,0.25), transparent 50%);
+    opacity: 0; transition: opacity 0.4s ease;
+  }
+  .gallery-item:hover::after { opacity: 1; }
+
+  /* ── BRAND ── */
+  #brand {
+    padding: 4rem 1.5rem;
+    background: var(--ivory);
+  }
+  .brand-card {
+    max-width: 480px; margin: 0 auto;
+    background: var(--white);
+    border: 1px solid rgba(212,197,176,0.5);
+    border-radius: 24px;
+    padding: 2.5rem 2rem;
+    text-align: center;
+    box-shadow: 0 4px 32px rgba(61,46,34,0.07);
+    opacity: 0; transform: translateY(20px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+    position: relative; overflow: hidden;
+  }
+  .brand-card::before {
+    content: ''; position: absolute;
+    top: -60px; right: -60px;
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(232,213,186,0.4), transparent 70%);
+    pointer-events: none;
+  }
+  .brand-card.visible { opacity: 1; transform: translateY(0); }
+  .brand-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.8rem; font-weight: 600;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--espresso); margin-bottom: 0.5rem;
+  }
+  .brand-sub {
+    font-size: 0.7rem; letter-spacing: 0.25em; text-transform: uppercase;
+    color: var(--soft-brown); margin-bottom: 1.5rem;
+  }
+  .brand-desc {
+    font-size: 0.87rem; line-height: 1.8; color: var(--warm-gray);
+    margin-bottom: 1.8rem;
+  }
+  .discount-box {
+    background: linear-gradient(135deg, var(--ivory), var(--champagne));
+    border: 1.5px dashed var(--beige);
+    border-radius: 14px;
+    padding: 1.2rem;
+    margin-bottom: 1.5rem;
+  }
+  .discount-label {
+    font-size: 0.65rem; letter-spacing: 0.25em; text-transform: uppercase;
+    color: var(--soft-brown); margin-bottom: 0.4rem; display: block;
+  }
+  .discount-code {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2rem; font-weight: 600;
+    letter-spacing: 0.1em; color: var(--espresso);
+  }
+  .discount-note {
+    font-size: 0.72rem; color: var(--soft-brown); margin-top: 0.3rem;
+  }
+
+  /* ── WHATSAPP CTA ── */
+  #cta {
+    padding: 5rem 1.5rem;
+    background: linear-gradient(135deg, var(--espresso) 0%, #5A4235 100%);
+    text-align: center; position: relative; overflow: hidden;
+  }
+  .cta-blob {
+    position: absolute; border-radius: 50%;
+    background: rgba(232,213,186,0.08);
+    pointer-events: none;
+  }
+  .cta-eyebrow {
+    font-size: 0.65rem; letter-spacing: 0.3em; text-transform: uppercase;
+    color: rgba(232,213,186,0.6); margin-bottom: 1rem; display: block;
+    opacity: 0; animation: fadeInUp 0.7s ease forwards;
+  }
+  .cta-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2rem, 8vw, 3.5rem); font-weight: 300;
+    color: var(--champagne); line-height: 1.1; margin-bottom: 1rem;
+    opacity: 0; animation: fadeInUp 0.7s ease 0.15s forwards;
+  }
+  .cta-text {
+    font-size: 0.87rem; line-height: 1.8;
+    color: rgba(232,213,186,0.65);
+    max-width: 300px; margin: 0 auto 2.5rem;
+    opacity: 0; animation: fadeInUp 0.7s ease 0.3s forwards;
+  }
+  #cta.visible .cta-eyebrow,
+  #cta.visible .cta-title,
+  #cta.visible .cta-text { animation-play-state: running; }
+
+  .cta-btn {
+    display: inline-flex; align-items: center; gap: 0.7rem;
+    background: var(--champagne);
+    color: var(--espresso);
+    text-decoration: none;
+    border-radius: 100px;
+    padding: 1rem 2.5rem;
+    font-size: 0.88rem; font-weight: 500; letter-spacing: 0.05em;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+    transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    opacity: 0;
+    position: relative; z-index: 1;
+  }
+  #cta.visible .cta-btn { animation: fadeInUp 0.7s ease 0.45s forwards; }
+  .cta-btn:hover { transform: translateY(-4px) scale(1.03); box-shadow: 0 16px 48px rgba(0,0,0,0.25); }
+  .wa-icon { font-size: 1.2rem; }
+
+  /* ── FOOTER ── */
+  footer {
+    padding: 3rem 1.5rem;
+    background: var(--cream);
+    text-align: center;
+    border-top: 1px solid rgba(212,197,176,0.3);
+  }
+  .footer-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.5rem; font-weight: 300; letter-spacing: 0.1em;
+    color: var(--espresso); margin-bottom: 0.3rem;
+  }
+  .footer-handle {
+    font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--soft-brown); margin-bottom: 1rem;
+  }
+  .footer-motto {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic; font-size: 0.95rem;
+    color: var(--warm-gray); margin-bottom: 1.5rem;
+  }
+  .footer-line {
+    width: 30px; height: 1px; background: var(--beige); margin: 0 auto 1rem;
+  }
+  .footer-copy {
+    font-size: 0.65rem; letter-spacing: 0.12em;
+    color: rgba(139,114,96,0.5);
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── NAV dot indicator ── */
+  .side-nav {
+    position: fixed; right: 1rem; top: 50%; transform: translateY(-50%);
+    display: flex; flex-direction: column; gap: 0.5rem; z-index: 100;
+  }
+  .nav-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--beige); cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  .nav-dot.active {
+    background: var(--accent); height: 20px; border-radius: 3px;
+  }
+
+  @media (max-width: 360px) {
+    .stats-grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- LOADER -->
+<div id="loader">
+  <div class="loader-inner">
+    <div class="loader-name">Celine Selmer</div>
+    <div class="loader-line"></div>
+    <div class="loader-sub">Digital Diary</div>
+  </div>
+</div>
+
+<!-- SIDE NAV -->
+<nav class="side-nav" aria-label="Page sections">
+  <div class="nav-dot active" data-section="hero" onclick="scrollTo('#hero')"></div>
+  <div class="nav-dot" data-section="stats" onclick="scrollTo('#stats')"></div>
+  <div class="nav-dot" data-section="links" onclick="scrollTo('#links')"></div>
+  <div class="nav-dot" data-section="mindset" onclick="scrollTo('#mindset')"></div>
+  <div class="nav-dot" data-section="gallery" onclick="scrollTo('#gallery')"></div>
+  <div class="nav-dot" data-section="brand" onclick="scrollTo('#brand')"></div>
+  <div class="nav-dot" data-section="cta" onclick="scrollTo('#cta')"></div>
+</nav>
+
+<!-- FLOATING PARTICLES -->
+<div class="particle" style="width:8px;height:8px;left:15%;top:30%;--dur:10s;--delay:0s;"></div>
+<div class="particle" style="width:5px;height:5px;left:80%;top:20%;--dur:13s;--delay:2s;"></div>
+<div class="particle" style="width:6px;height:6px;left:60%;top:70%;--dur:11s;--delay:4s;"></div>
+<div class="particle" style="width:4px;height:4px;left:30%;top:80%;--dur:9s;--delay:1s;"></div>
+
+<!-- 1. HERO -->
+<section id="hero">
+  <div class="hero-img" id="heroImg"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="hero-badge">✦ Fitness · Wellness · Mindset ✦</div>
+    <h1 class="hero-name">Celine Selmer</h1>
+    <p class="hero-handle">@fitness.celine</p>
+    <p class="hero-tagline">"Welcome to my digital diary"</p>
+    <p class="hero-sub">Fitness, mindset, wellness & becoming the best version of yourself.</p>
+    <div class="hero-meta">
+      <div class="hero-pill">14.4K Followers</div>
+      <div class="hero-pill">@icaniwill</div>
+      <div class="hero-pill">FITNESSCELINE20</div>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <span>Scroll</span>
+    <div class="scroll-dot"></div>
+  </div>
+</section>
+
+<!-- 2. STATS -->
+<section id="stats">
+  <div class="section-header">
+    <span class="section-eyebrow">Community</span>
+    <h2 class="section-title">A life in motion</h2>
+    <div class="section-divider"></div>
+  </div>
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon">🌿</div>
+      <div class="stat-number">14.4K</div>
+      <div class="stat-label">Followers</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">💪</div>
+      <div class="stat-number">∞</div>
+      <div class="stat-label">Fitness Creator</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">🧘</div>
+      <div class="stat-number">Daily</div>
+      <div class="stat-label">Wellness & Mindset</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">✦</div>
+      <div class="stat-number">Partner</div>
+      <div class="stat-label">@icaniwill</div>
+    </div>
+  </div>
+</section>
+
+<!-- 3. LINKS -->
+<section id="links">
+  <div class="section-header">
+    <span class="section-eyebrow">Explore</span>
+    <h2 class="section-title">My World</h2>
+    <div class="section-divider"></div>
+  </div>
+  <div class="links-stack">
+    <a href="https://de.juiceplus.com/pages/become-a-partner?commSysPartnerID=10666842" target="_blank" rel="noopener" class="link-card">
+      <div class="link-emoji">🌱</div>
+      <div class="link-text">
+        <span class="link-title">Juice Plus+ Partner</span>
+        <span class="link-desc">Join my wellness journey</span>
+      </div>
+      <span class="link-arrow">→</span>
+    </a>
+    <a href="https://selmer43237.juiceplus.com/de/de" target="_blank" rel="noopener" class="link-card">
+      <div class="link-emoji">🛍</div>
+      <div class="link-text">
+        <span class="link-title">Juice Plus+ Shop</span>
+        <span class="link-desc">Nourish from within</span>
+      </div>
+      <span class="link-arrow">→</span>
+    </a>
+    <a href="https://us.juiceplus.com/pages/research" target="_blank" rel="noopener" class="link-card">
+      <div class="link-emoji">🔬</div>
+      <div class="link-text">
+        <span class="link-title">Juice Plus+ Research</span>
+        <span class="link-desc">The science behind it</span>
+      </div>
+      <span class="link-arrow">→</span>
+    </a>
+    <a href="https://wa.link/jio7fs" target="_blank" rel="noopener" class="link-card whatsapp">
+      <div class="link-emoji">💬</div>
+      <div class="link-text">
+        <span class="link-title">Let's connect privately ✨</span>
+        <span class="link-desc">Direct message on WhatsApp</span>
+      </div>
+      <span class="link-arrow">→</span>
+    </a>
+  </div>
+</section>
+
+<!-- 4. MINDSET -->
+<section id="mindset">
+  <div class="mindset-inner">
+    <div class="section-header">
+      <span class="section-eyebrow">Mindset</span>
+      <h2 class="section-title">My Philosophy</h2>
+      <div class="section-divider"></div>
+    </div>
+    <div class="mindset-quote-wrap">
+      <div class="quote-mark">"</div>
+      <p class="mindset-quote">What you're not changing, you're choosing.</p>
+    </div>
+    <div class="mindset-body">
+      <p class="mindset-text">
+        I'm a girl building her dream life through discipline, mindset, wellness and confidence. Every rep, every healthy meal, every early morning — it's all part of becoming who I was always meant to be.
+      </p>
+      <p class="mindset-text">
+        This isn't just fitness. It's a whole lifestyle. Feminine, intentional, and unapologetically soft yet powerful.
+      </p>
+      <div class="mindset-tags">
+        <span class="mindset-tag">Gym Girly</span>
+        <span class="mindset-tag">Boss Mentality</span>
+        <span class="mindset-tag">Wellness</span>
+        <span class="mindset-tag">Self Growth</span>
+        <span class="mindset-tag">Happy Soul</span>
+        <span class="mindset-tag">Soft Luxury</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 5. GALLERY -->
+<section id="gallery">
+  <div class="section-header">
+    <span class="section-eyebrow">Lifestyle</span>
+    <h2 class="section-title">Visual Diary</h2>
+    <div class="section-divider"></div>
+  </div>
+  <div class="gallery-grid">
+    <div class="gallery-item">
+      <img src="https://res.cloudinary.com/dqje367sj/image/upload/v1778695178/DCA8C490-4D6A-4277-AAA6-368BBC406090_xua5np.jpg" alt="Celine lifestyle" loading="lazy">
+    </div>
+    <div class="gallery-item">
+      <img src="https://res.cloudinary.com/dqje367sj/image/upload/v1778695178/189C262A-68C0-4EAC-A06E-CFDB1A290F87_cfrlzm.jpg" alt="Celine wellness" loading="lazy">
+    </div>
+    <div class="gallery-item">
+      <img src="https://res.cloudinary.com/dqje367sj/image/upload/v1778695177/4C565E6E-E308-4A0C-9DE2-398C10E0412E_skhcss.jpg" alt="Celine fitness" loading="lazy">
+    </div>
+    <div class="gallery-item">
+      <img src="https://res.cloudinary.com/dqje367sj/image/upload/v1778695177/1FA47E57-D63D-49D8-961C-1EA94BA79073_uox9ex.jpg" alt="Celine selfie" loading="lazy">
+    </div>
+    <div class="gallery-item">
+      <img src="https://res.cloudinary.com/dqje367sj/image/upload/v1778695178/87ABA179-F2C5-4480-9E31-B58EE54FE25A_kivuuk.jpg" alt="Celine and boyfriend" loading="lazy">
+    </div>
+    <div class="gallery-item">
+      <img src="https://res.cloudinary.com/dqje367sj/image/upload/v1778695178/A539A4AF-6E0E-4C7C-9975-F847A63B50F6_zsuf5t.jpg" alt="Celine lifestyle" loading="lazy">
+    </div>
+    <div class="gallery-item">
+      <img src="https://res.cloudinary.com/dqje367sj/image/upload/v1778695178/E12C2E5D-6375-4C52-A83E-9960438512C2_ippynp.jpg" alt="Celine bikini" loading="lazy" style="grid-column: span 2;">
+    </div>
+  </div>
+</section>
+
+<!-- 6. BRAND -->
+<section id="brand">
+  <div class="section-header">
+    <span class="section-eyebrow">Partnership</span>
+    <h2 class="section-title">Featured Brand</h2>
+    <div class="section-divider"></div>
+  </div>
+  <div class="brand-card">
+    <div class="brand-logo">ICAN IWILL</div>
+    <div class="brand-sub">Official Brand Partner</div>
+    <p class="brand-desc">
+      I partnered with @icaniwill because I believe in their philosophy — that every body deserves premium activewear that empowers. Scandinavian design meets feminine performance.
+    </p>
+    <div class="discount-box">
+      <span class="discount-label">Your exclusive discount code</span>
+      <div class="discount-code">FITNESSCELINE20</div>
+      <div class="discount-note">Save on your next order ✦</div>
+    </div>
+  </div>
+</section>
+
+<!-- 7. WHATSAPP CTA -->
+<section id="cta">
+  <div class="cta-blob" style="width:300px;height:300px;top:-100px;left:-100px;"></div>
+  <div class="cta-blob" style="width:200px;height:200px;bottom:-50px;right:-50px;"></div>
+  <span class="cta-eyebrow">Let's connect</span>
+  <h2 class="cta-title">Join my journey ✨</h2>
+  <p class="cta-text">Connect with me directly. I'd love to share more, support your goals, and be part of your story.</p>
+  <a href="https://wa.link/jio7fs" target="_blank" rel="noopener" class="cta-btn">
+    <span class="wa-icon">💬</span>
+    Talk to me on WhatsApp
+  </a>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-name">Celine Selmer</div>
+  <div class="footer-handle">@fitness.celine</div>
+  <div class="footer-motto">"What you're not changing, you're choosing."</div>
+  <div class="footer-line"></div>
+  <div class="footer-copy">© 2025 Celine Selmer · Made with love & discipline</div>
+</footer>
+
+<script>
+  // Loader
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      document.getElementById('loader').classList.add('hidden');
+      document.getElementById('heroImg').classList.add('loaded');
+    }, 2200);
+  });
+
+  // Scroll helper
+  function scrollTo(selector) {
+    document.querySelector(selector)?.scrollIntoView({ behavior: 'smooth' });
+  }
+
+  // Intersection observer for reveal
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const el = entry.target;
+        el.classList.add('visible');
+        // Stagger children
+        el.querySelectorAll('.stat-card, .link-card, .gallery-item').forEach((child, i) => {
+          setTimeout(() => child.classList.add('visible'), i * 100);
+        });
+      }
+    });
+  }, { threshold: 0.12 });
+
+  // Observe sections and elements
+  document.querySelectorAll('.section-header, .stat-card, .link-card, .gallery-item, .brand-card, .mindset-quote-wrap, .mindset-body').forEach(el => observer.observe(el));
+
+  // CTA section special handling
+  const ctaObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) entry.target.classList.add('visible');
+    });
+  }, { threshold: 0.2 });
+  ctaObserver.observe(document.getElementById('cta'));
+
+  // Nav dot active state
+  const sections = ['hero', 'stats', 'links', 'mindset', 'gallery', 'brand', 'cta'];
+  const navDots = document.querySelectorAll('.nav-dot');
+  const sectionObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navDots.forEach(d => d.classList.remove('active'));
+        const idx = sections.indexOf(entry.target.id);
+        if (idx >= 0) navDots[idx]?.classList.add('active');
+      }
+    });
+  }, { threshold: 0.4 });
+  sections.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) sectionObserver.observe(el);
+  });
+</script>
+</body>
+</html>
