@@ -45,11 +45,11 @@ a{text-decoration:none;color:inherit}
    DARK MODE TOKENS — warm espresso luxury
 ═══════════════════════════════════════════════ */
 [data-theme="dark"]{
-  --bg:        #1A120D;
-  --surface:   #211710;
-  --surface2:  #2A1F17;
-  --sand:      #302219;
-  --beige:     #38281D;
+  --bg:        #0A0A0A;
+  --surface:   #111111;
+  --surface2:  #1A1A1A;
+  --sand:      #222222;
+  --beige:     #2C2C2C;
   --champagne: #C9A87C;
   --nude:      #B8936A;
   --espresso:  #F0E6D6;
@@ -57,10 +57,10 @@ a{text-decoration:none;color:inherit}
   --soft-brown:#A8917A;
   --accent:    #C9A87C;
   --white:     #FAF0E0;
-  --card-bg:   rgba(42,31,23,0.85);
-  --card-border:rgba(201,168,124,0.2);
-  --glass-bg:  rgba(33,23,16,0.85);
-  --glass-border:rgba(201,168,124,0.22);
+  --card-bg:   rgba(20,20,20,0.9);
+  --card-border:rgba(201,168,124,0.18);
+  --glass-bg:  rgba(10,10,10,0.88);
+  --glass-border:rgba(201,168,124,0.2);
   --shadow-sm: 0 4px 28px rgba(0,0,0,0.25);
   --shadow-md: 0 10px 44px rgba(0,0,0,0.3);
   --shadow-lg: 0 18px 60px rgba(0,0,0,0.38);
@@ -209,9 +209,9 @@ body{background:var(--bg);color:var(--espresso)}
 }
 [data-theme="dark"] .hero-editorial-bg{
   background:
-    radial-gradient(ellipse 80% 60% at 60% 40%,rgba(201,168,124,0.18) 0%,transparent 65%),
-    radial-gradient(ellipse 50% 50% at 20% 70%,rgba(80,55,35,0.4) 0%,transparent 60%),
-    var(--bg);
+    radial-gradient(ellipse 80% 60% at 60% 40%,rgba(201,168,124,0.12) 0%,transparent 65%),
+    radial-gradient(ellipse 50% 50% at 20% 70%,rgba(40,40,40,0.6) 0%,transparent 60%),
+    #0A0A0A;
 }
 @media(min-width:1024px){.hero-editorial-bg{display:block}}
 
@@ -233,8 +233,8 @@ body{background:var(--bg);color:var(--espresso)}
 @media(min-width:1024px){
   #hero{align-items:center}
   .hero-content{
-    display:grid;grid-template-columns:1fr 1fr;
-    align-items:center;gap:0;
+    display:grid;grid-template-columns:1fr auto;
+    align-items:center;gap:4rem;
     text-align:left;max-width:1200px;padding:0 6rem;
   }
   .hero-left{display:flex;flex-direction:column;align-items:flex-start}
@@ -324,47 +324,78 @@ body{background:var(--bg);color:var(--espresso)}
   }
 }
 
-/* Desktop info card (right side) */
+/* Desktop info card (right side) — portrait photo frame */
 .hero-info-card{
   display:none;
 }
 @media(min-width:1024px){
   .hero-info-card{
-    display:flex;flex-direction:column;gap:1rem;
+    display:flex;flex-direction:column;gap:0;
+    position:relative;
+    width:340px;flex-shrink:0;
+  }
+  /* Portrait image frame */
+  .hero-photo-frame{
+    width:100%;
+    aspect-ratio:4/5;
+    border-radius:24px;
+    overflow:hidden;
+    box-shadow:0 24px 80px rgba(61,46,34,0.22);
+    position:relative;
+  }
+  [data-theme="dark"] .hero-photo-frame{
+    box-shadow:0 24px 80px rgba(0,0,0,0.55);
+  }
+  .hero-photo-frame img{
+    width:100%;height:100%;
+    object-fit:cover;
+    object-position:center 20%;
+    display:block;
+  }
+  /* Info ribbon below photo */
+  .hero-info-ribbon{
+    margin-top:0.9rem;
     background:var(--glass-bg);
     backdrop-filter:blur(24px);
     border:1px solid var(--glass-border);
-    border-radius:28px;
-    padding:2.5rem 2.2rem;
-    box-shadow:var(--shadow-lg);
-    min-width:280px;max-width:320px;
+    border-radius:18px;
+    padding:1.2rem 1.4rem;
+    box-shadow:var(--shadow-md);
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:0.6rem 1.2rem;
+    align-items:start;
   }
   .hero-info-row{
-    display:flex;align-items:center;justify-content:space-between;
-    gap:1rem;
+    display:flex;flex-direction:column;gap:0.15rem;
   }
   .hero-info-label{
-    font-size:0.58rem;letter-spacing:0.26em;text-transform:uppercase;
-    color:var(--soft-brown);
+    font-size:0.52rem;letter-spacing:0.24em;text-transform:uppercase;
+    color:var(--soft-brown);line-height:1;
   }
   .hero-info-val{
     font-family:'Cormorant Garamond',serif;
-    font-size:1.1rem;font-weight:500;
-    color:var(--espresso);letter-spacing:0.05em;
-    text-align:right;
+    font-size:1rem;font-weight:500;
+    color:var(--espresso);letter-spacing:0.04em;
+    white-space:nowrap;
   }
-  .hero-info-divider{height:1px;background:var(--card-border)}
-  .hero-info-code{
-    font-family:'Cormorant Garamond',serif;
-    font-size:clamp(0.9rem,2vw,1.3rem);
-    font-weight:600;letter-spacing:0.1em;
-    color:var(--espresso);
+  /* Code spans full width */
+  .hero-info-code-wrap{
+    grid-column:1/-1;
+    border-top:1px solid var(--card-border);
+    padding-top:0.6rem;
     text-align:center;
-    word-break:break-word;overflow-wrap:anywhere;
   }
   .hero-info-code-label{
-    font-size:0.55rem;letter-spacing:0.28em;text-transform:uppercase;
-    color:var(--soft-brown);text-align:center;margin-bottom:0.3rem;
+    font-size:0.5rem;letter-spacing:0.26em;text-transform:uppercase;
+    color:var(--soft-brown);margin-bottom:0.3rem;display:block;
+  }
+  .hero-info-code{
+    font-family:'Cormorant Garamond',serif;
+    font-size:1.15rem;
+    font-weight:600;letter-spacing:0.08em;
+    color:var(--espresso);
+    white-space:nowrap;
   }
 }
 
@@ -792,11 +823,13 @@ body{background:var(--bg);color:var(--espresso)}
 }
 .discount-code{
   font-family:'Cormorant Garamond',serif;
-  font-size:clamp(1.4rem,8vw,2.4rem);
+  font-size:clamp(1.1rem,5.5vw,2.2rem);
   font-weight:600;
-  letter-spacing:clamp(0.03em,0.8vw,0.1em);
+  letter-spacing:0.04em;
   color:var(--espresso);
-  word-break:break-word;overflow-wrap:anywhere;max-width:100%;
+  word-break:keep-all;overflow-wrap:normal;
+  white-space:nowrap;max-width:100%;
+  display:block;
 }
 .discount-note{
   font-size:0.66rem;letter-spacing:0.1em;
@@ -811,8 +844,8 @@ body{background:var(--bg);color:var(--espresso)}
   background:linear-gradient(150deg,#3D2E22 0%,#5A4132 60%,#3D2E22 100%);
   text-align:center;position:relative;overflow:hidden;
 }
-[data-theme="dark"]#cta{
-  background:linear-gradient(150deg,#1A120D 0%,#2A1F17 60%,#1A120D 100%);
+[data-theme="dark"] #cta{
+  background:linear-gradient(150deg,#000000 0%,#111111 60%,#000000 100%);
 }
 @media(min-width:768px){#cta{padding:10rem 3rem}}
 .cta-glow{
@@ -943,33 +976,35 @@ footer{
       <p class="hero-tagline" data-de="&ldquo;Willkommen in meinem digitalen Tagebuch&rdquo;" data-en="&ldquo;Welcome to my digital diary&rdquo;">&ldquo;Willkommen in meinem digitalen Tagebuch&rdquo;</p>
       <p class="hero-sub" data-de="Fitness, Mindset, Wellness &amp; die beste Version von dir selbst werden." data-en="Fitness, mindset, wellness &amp; becoming the best version of yourself.">Fitness, Mindset, Wellness &amp; die beste Version von dir selbst werden.</p>
       <div class="hero-meta">
-        <div class="hero-pill" data-de="14,4K Follower" data-en="14.4K Followers">14,4K Follower</div>
+        <div class="hero-pill" data-de="14K Follower" data-en="14K Followers">14K Follower</div>
         <div class="hero-pill">@icaniwill</div>
         <div class="hero-pill">FITNESSCELINE20</div>
       </div>
     </div>
 
-    <!-- RIGHT (desktop info card only) -->
+    <!-- RIGHT (desktop: photo + info ribbon) -->
     <div class="hero-right">
       <div class="hero-info-card">
-        <div class="hero-info-row">
-          <span class="hero-info-label" data-de="Follower" data-en="Followers">Follower</span>
-          <span class="hero-info-val">14,4K</span>
+        <div class="hero-photo-frame">
+          <img src="https://res.cloudinary.com/dqje367sj/image/upload/v1778695177/26CD62D4-752C-4E08-901A-FCDC5FF3019F_czsk4d.jpg" alt="Celine Selmer">
         </div>
-        <div class="hero-info-divider"></div>
-        <div class="hero-info-row">
-          <span class="hero-info-label">@icaniwill</span>
-          <span class="hero-info-val" data-de="Offiziell" data-en="Official">Offiziell</span>
-        </div>
-        <div class="hero-info-divider"></div>
-        <div>
-          <div class="hero-info-code-label" data-de="Exklusiver Rabattcode" data-en="Exclusive discount code">Exklusiver Rabattcode</div>
-          <div class="hero-info-code">FITNESSCELINE20</div>
-        </div>
-        <div class="hero-info-divider"></div>
-        <div class="hero-info-row">
-          <span class="hero-info-label">CLINE Bags</span>
-          <span class="hero-info-val" data-de="Handmade" data-en="Handmade">Handmade</span>
+        <div class="hero-info-ribbon">
+          <div class="hero-info-row">
+            <span class="hero-info-label" data-de="Follower" data-en="Followers">Follower</span>
+            <span class="hero-info-val">14K</span>
+          </div>
+          <div class="hero-info-row">
+            <span class="hero-info-label">@icaniwill</span>
+            <span class="hero-info-val" data-de="Offiziell" data-en="Official">Offiziell</span>
+          </div>
+          <div class="hero-info-row">
+            <span class="hero-info-label">CLINE Bags</span>
+            <span class="hero-info-val">Handmade</span>
+          </div>
+          <div class="hero-info-code-wrap">
+            <span class="hero-info-code-label" data-de="Exklusiver Rabattcode" data-en="Exclusive discount code">Exklusiver Rabattcode</span>
+            <div class="hero-info-code">FITNESSCELINE20</div>
+          </div>
         </div>
       </div>
     </div>
@@ -993,7 +1028,7 @@ footer{
   <div class="stats-grid">
     <div class="stat-card">
       <div class="stat-ornament"></div>
-      <div class="stat-number">14,4K</div>
+      <div class="stat-number">14K</div>
       <div class="stat-label" data-de="Follower" data-en="Followers">Follower</div>
     </div>
     <div class="stat-card">
@@ -1129,9 +1164,6 @@ footer{
     </div>
     <div class="gallery-item">
       <div class="gi-inner"><img src="https://res.cloudinary.com/dqje367sj/image/upload/v1778695178/87ABA179-F2C5-4480-9E31-B58EE54FE25A_kivuuk.jpg" alt="Celine Paar" loading="lazy"></div>
-    </div>
-    <div class="gallery-item">
-      <div class="gi-inner"><img src="https://res.cloudinary.com/dqje367sj/image/upload/v1778695178/A539A4AF-6E0E-4C7C-9975-F847A63B50F6_zsuf5t.jpg" alt="Celine Style" loading="lazy"></div>
     </div>
     <div class="gallery-item wide">
       <div class="gi-inner"><img src="https://res.cloudinary.com/dqje367sj/image/upload/v1778695178/E12C2E5D-6375-4C52-A83E-9960438512C2_ippynp.jpg" alt="Celine Strand" loading="lazy"></div>
