@@ -38,8 +38,6 @@ a{text-decoration:none;color:inherit}
   --shadow-sm: 0 4px 28px rgba(61,46,34,0.05);
   --shadow-md: 0 10px 44px rgba(61,46,34,0.09);
   --shadow-lg: 0 18px 60px rgba(61,46,34,0.13);
-  --bag-bg:    radial-gradient(ellipse 72% 62% at 50% 44%, rgba(232,213,186,0.35) 0%, rgba(245,240,232,0.65) 55%, #F5F0E8 100%);
-  --bag-shadow:rgba(100,70,40,0.13);
 }
 
 /* ═══════════════════════════════════════════════
@@ -65,8 +63,6 @@ a{text-decoration:none;color:inherit}
   --shadow-sm: 0 4px 28px rgba(0,0,0,0.28);
   --shadow-md: 0 10px 44px rgba(0,0,0,0.32);
   --shadow-lg: 0 18px 60px rgba(0,0,0,0.4);
-  --bag-bg:    radial-gradient(ellipse 72% 62% at 50% 44%, rgba(201,168,124,0.14) 0%, rgba(26,26,26,0.8) 55%, #1A1A1A 100%);
-  --bag-shadow:rgba(0,0,0,0.4);
 }
 
 body{background:var(--bg);color:var(--espresso)}
@@ -594,64 +590,66 @@ body{background:var(--bg);color:var(--espresso)}
 .bag-card.visible{opacity:1;transform:translateY(0)}
 .bag-card:hover{transform:translateY(-6px);box-shadow:var(--shadow-lg)}
 
-/* ── PRODUCT IMAGE AREA — floating studio presentation ── */
+/* ── PRODUCT IMAGE AREA — full-bleed editorial header ── */
 .bag-img-wrap{
   position:relative;
-  background:var(--bag-bg);
-  padding:2.4rem 2rem 1.6rem;
+  width:100%;
+  aspect-ratio:4/5;
+  padding:0;
   display:flex;
   align-items:center;
   justify-content:center;
-  min-height:270px;
   overflow:hidden;
+  background:transparent;
 }
 
-/* Ambient radial glow behind product */
+/* Subtle centered glow — integrated, not framing */
 .bag-img-wrap::before{
   content:'';
   position:absolute;
-  top:50%;left:50%;
-  transform:translate(-50%,-55%);
-  width:70%;height:55%;
-  background:radial-gradient(ellipse,rgba(232,213,186,0.5) 0%,transparent 70%);
+  inset:0;
+  background:radial-gradient(ellipse 65% 55% at 50% 45%, rgba(232,213,186,0.28) 0%, transparent 68%);
   pointer-events:none;
   z-index:0;
 }
 [data-theme="dark"] .bag-img-wrap::before{
-  background:radial-gradient(ellipse,rgba(201,168,124,0.15) 0%,transparent 70%);
+  background:radial-gradient(ellipse 65% 55% at 50% 45%, rgba(201,168,124,0.1) 0%, transparent 68%);
 }
 
-/* Grounded shadow beneath each bag */
+/* Grounded shadow — lower, integrated */
 .bag-img-wrap::after{
   content:'';
   position:absolute;
-  bottom:1.4rem;left:50%;
+  bottom:6%;left:50%;
   transform:translateX(-50%);
-  width:48%;height:16px;
-  background:radial-gradient(ellipse,var(--bag-shadow) 0%,transparent 72%);
+  width:42%;height:12px;
+  background:radial-gradient(ellipse, rgba(80,50,30,0.12) 0%, transparent 72%);
   border-radius:50%;
   pointer-events:none;
   z-index:1;
 }
+[data-theme="dark"] .bag-img-wrap::after{
+  background:radial-gradient(ellipse, rgba(0,0,0,0.3) 0%, transparent 72%);
+}
 
 .bag-img-wrap img{
   display:block;
-  width:100%;
-  max-width:210px;
-  height:230px;
+  width:92%;
+  height:92%;
   object-fit:contain;
   object-position:center center;
   position:relative;
   z-index:2;
-  filter:drop-shadow(0 8px 22px rgba(61,46,34,0.09));
+  filter:drop-shadow(0 6px 18px rgba(61,46,34,0.08));
   transition:transform 0.65s cubic-bezier(0.25,0.46,0.45,0.94);
 }
-.bag-card:hover .bag-img-wrap img{transform:translateY(-5px) scale(1.02)}
+.bag-card:hover .bag-img-wrap img{transform:translateY(-5px) scale(1.03)}
 
 /* ── BAG INFO ── */
 .bag-info{
-  padding:1.4rem 1.5rem 1.7rem;
+  padding:1.4rem 1.5rem 1.8rem;
   border-top:1px solid var(--card-border);
+  background:var(--card-bg);
 }
 .bag-name{
   font-family:'Cormorant Garamond',serif;
