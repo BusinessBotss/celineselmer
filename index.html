@@ -570,117 +570,187 @@ body{background:var(--bg);color:var(--espresso)}
   }
 }
 
-/* ── BAG CARD ── */
+/* ── BAG CARD — Jacquemus editorial structure ── */
 .bag-card{
   scroll-snap-align:start;
-  flex:0 0 78vw;
-  min-width:240px;
-  max-width:310px;
+  flex:0 0 82vw;
+  min-width:250px;
+  max-width:320px;
   background:var(--card-bg);
-  backdrop-filter:blur(16px);
   border:1px solid var(--card-border);
-  border-radius:26px;
+  border-radius:20px;
   overflow:hidden;
-  box-shadow:0 8px 40px rgba(61,46,34,0.07);
-  transition:transform 0.42s cubic-bezier(0.34,1.56,0.64,1),box-shadow 0.42s ease;
+  box-shadow:0 6px 32px rgba(61,46,34,0.07);
+  transition:transform 0.5s cubic-bezier(0.25,0.46,0.45,0.94),box-shadow 0.5s ease;
   opacity:0;transform:translateY(20px);
+  display:flex;
+  flex-direction:column;
 }
-[data-theme="dark"] .bag-card{box-shadow:0 8px 40px rgba(0,0,0,0.28)}
+[data-theme="dark"] .bag-card{
+  box-shadow:0 6px 32px rgba(0,0,0,0.3);
+  background:var(--card-bg);
+}
 @media(min-width:768px){.bag-card{flex:none;max-width:none}}
 .bag-card.visible{opacity:1;transform:translateY(0)}
-.bag-card:hover{transform:translateY(-6px);box-shadow:var(--shadow-lg)}
+.bag-card:hover{transform:translateY(-4px);box-shadow:0 16px 52px rgba(61,46,34,0.12)}
+[data-theme="dark"] .bag-card:hover{box-shadow:0 16px 52px rgba(0,0,0,0.4)}
 
-/* ── PRODUCT IMAGE AREA — full-bleed editorial header ── */
-.bag-img-wrap{
+/* ── BAG IMAGE — editorial full-area product hero ── */
+.bag-image{
   position:relative;
   width:100%;
   aspect-ratio:4/5;
-  padding:0;
+  background:#F0EBE3;
   display:flex;
   align-items:center;
   justify-content:center;
   overflow:hidden;
-  background:transparent;
+  flex-shrink:0;
 }
+[data-theme="dark"] .bag-image{background:#1C1614}
 
-/* Subtle centered glow — integrated, not framing */
-.bag-img-wrap::before{
+/* Soft ambient studio light */
+.bag-image::before{
   content:'';
   position:absolute;
   inset:0;
-  background:radial-gradient(ellipse 65% 55% at 50% 45%, rgba(232,213,186,0.28) 0%, transparent 68%);
-  pointer-events:none;
-  z-index:0;
-}
-[data-theme="dark"] .bag-img-wrap::before{
-  background:radial-gradient(ellipse 65% 55% at 50% 45%, rgba(201,168,124,0.1) 0%, transparent 68%);
-}
-
-/* Grounded shadow — lower, integrated */
-.bag-img-wrap::after{
-  content:'';
-  position:absolute;
-  bottom:6%;left:50%;
-  transform:translateX(-50%);
-  width:42%;height:12px;
-  background:radial-gradient(ellipse, rgba(80,50,30,0.12) 0%, transparent 72%);
-  border-radius:50%;
+  background:radial-gradient(ellipse 80% 70% at 50% 40%, rgba(255,248,238,0.55) 0%, transparent 65%);
   pointer-events:none;
   z-index:1;
 }
-[data-theme="dark"] .bag-img-wrap::after{
-  background:radial-gradient(ellipse, rgba(0,0,0,0.3) 0%, transparent 72%);
+[data-theme="dark"] .bag-image::before{
+  background:radial-gradient(ellipse 80% 70% at 50% 40%, rgba(201,168,124,0.12) 0%, transparent 65%);
 }
 
-.bag-img-wrap img{
-  display:block;
-  width:92%;
-  height:92%;
+/* Grounded product shadow */
+.bag-image::after{
+  content:'';
+  position:absolute;
+  bottom:5%;left:50%;
+  transform:translateX(-50%);
+  width:50%;height:14px;
+  background:radial-gradient(ellipse, rgba(61,46,34,0.14) 0%, transparent 70%);
+  border-radius:50%;
+  pointer-events:none;
+  z-index:2;
+}
+[data-theme="dark"] .bag-image::after{
+  background:radial-gradient(ellipse, rgba(0,0,0,0.35) 0%, transparent 70%);
+}
+
+.bag-image img{
+  position:relative;
+  z-index:3;
+  width:88%;
+  height:88%;
   object-fit:contain;
   object-position:center center;
-  position:relative;
-  z-index:2;
-  filter:drop-shadow(0 6px 18px rgba(61,46,34,0.08));
-  transition:transform 0.65s cubic-bezier(0.25,0.46,0.45,0.94);
+  display:block;
+  filter:drop-shadow(0 4px 16px rgba(61,46,34,0.1));
+  transition:transform 0.6s cubic-bezier(0.25,0.46,0.45,0.94);
 }
-.bag-card:hover .bag-img-wrap img{transform:translateY(-5px) scale(1.03)}
+.bag-card:hover .bag-image img{transform:translateY(-6px) scale(1.03)}
 
-/* ── BAG INFO ── */
-.bag-info{
-  padding:1.4rem 1.5rem 1.8rem;
+/* Badge on image */
+.bag-badge{
+  position:absolute;
+  top:1rem;left:1rem;
+  z-index:4;
+  font-size:0.5rem;letter-spacing:0.22em;text-transform:uppercase;
+  color:var(--espresso);
+  background:rgba(255,253,251,0.88);
+  border:1px solid rgba(212,197,176,0.5);
+  border-radius:100px;
+  padding:0.25rem 0.7rem;
+  backdrop-filter:blur(8px);
+}
+[data-theme="dark"] .bag-badge{
+  background:rgba(28,22,20,0.9);
+  color:var(--champagne);
+  border-color:rgba(201,168,124,0.3);
+}
+
+/* ── BAG CONTENT — boutique info block ── */
+.bag-content{
+  padding:1.4rem 1.4rem 1.6rem;
   border-top:1px solid var(--card-border);
   background:var(--card-bg);
+  display:flex;
+  flex-direction:column;
+  gap:0.5rem;
+  flex:1;
 }
-.bag-name{
+[data-theme="dark"] .bag-content{background:var(--card-bg)}
+
+.bag-category{
+  font-size:0.52rem;letter-spacing:0.28em;text-transform:uppercase;
+  color:var(--accent);margin:0;line-height:1;
+}
+.bag-title{
   font-family:'Cormorant Garamond',serif;
-  font-size:clamp(1.15rem,3vw,1.4rem);font-weight:500;
-  color:var(--espresso);margin-bottom:0.45rem;letter-spacing:0.01em;
+  font-size:clamp(1.2rem,3vw,1.5rem);font-weight:500;
+  color:var(--espresso);letter-spacing:0.01em;
+  line-height:1.1;margin:0;
   overflow-wrap:anywhere;word-break:break-word;
 }
-.bag-desc{
-  font-size:0.72rem;line-height:1.78;
-  color:var(--warm-gray);margin-bottom:1.1rem;
+.bag-description{
+  font-size:0.72rem;line-height:1.75;
+  color:var(--warm-gray);margin:0;
   overflow-wrap:anywhere;word-break:break-word;
 }
-.bag-tags{display:flex;flex-wrap:wrap;gap:0.4rem;margin-bottom:1.2rem}
+.bag-tags{display:flex;flex-wrap:wrap;gap:0.35rem;margin:0}
 .bag-tag{
-  font-size:0.56rem;letter-spacing:0.16em;text-transform:uppercase;
-  color:var(--soft-brown);background:var(--surface2);
+  font-size:0.52rem;letter-spacing:0.15em;text-transform:uppercase;
+  color:var(--soft-brown);
+  background:transparent;
   border:1px solid var(--card-border);
-  border-radius:100px;padding:0.22rem 0.62rem;
+  border-radius:100px;padding:0.2rem 0.58rem;
+}
+.bag-footer{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:0.8rem;
+  margin-top:0.4rem;
+}
+.bag-price{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1rem;font-weight:500;
+  color:var(--espresso);letter-spacing:0.04em;
+  white-space:nowrap;
 }
 .bag-btn{
-  display:block;width:100%;
+  flex:1;
   background:var(--espresso);color:var(--bg);
   border:none;cursor:pointer;
   border-radius:100px;
-  padding:0.82rem 1rem;
-  font-size:0.68rem;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;
+  padding:0.72rem 1rem;
+  font-size:0.6rem;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;
   font-family:'DM Sans',sans-serif;
   transition:opacity 0.3s ease,transform 0.3s ease;
   text-align:center;text-decoration:none;
+  white-space:nowrap;
 }
-.bag-btn:hover{opacity:0.85;transform:scale(0.98)}
+.bag-btn:hover{opacity:0.82;transform:scale(0.97)}
+
+/* Keep old .bag-info, .bag-name, .bag-desc aliases for any fallback */
+.bag-info{
+  padding:1.4rem 1.4rem 1.6rem;
+  border-top:1px solid var(--card-border);
+  background:var(--card-bg);
+  display:flex;flex-direction:column;gap:0.5rem;
+}
+.bag-name{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(1.2rem,3vw,1.5rem);font-weight:500;
+  color:var(--espresso);letter-spacing:0.01em;
+  line-height:1.1;margin:0;
+}
+.bag-desc{
+  font-size:0.72rem;line-height:1.75;
+  color:var(--warm-gray);margin:0;
+  overflow-wrap:anywhere;word-break:break-word;
+}
 
 /* ── CAROUSEL DOTS ── */
 .carousel-dots{
@@ -1063,98 +1133,133 @@ footer{
   <div class="bag-carousel" id="bagCarousel">
 
     <div class="bag-card">
-      <div class="bag-img-wrap">
+      <div class="bag-image">
+        <span class="bag-badge" data-de="Beliebt" data-en="Popular">Beliebt</span>
         <img src="https://res.cloudinary.com/dqje367sj/image/upload/v1779056371/E7A88757-AEA5-42CE-9269-08DA26B201E3_eysohd.png" alt="Ros&eacute; Ribbon Bag" loading="lazy">
       </div>
-      <div class="bag-info">
-        <h3 class="bag-name">Ros&eacute; Ribbon</h3>
-        <p class="bag-desc" data-de="Sanftes Ros&eacute; trifft auf skulpturale Textur. F&uuml;r die Frau, die Stille als Stil tr&auml;gt." data-en="Soft rose meets sculptural texture. For the woman who wears stillness as style.">Sanftes Ros&eacute; trifft auf skulpturale Textur. F&uuml;r die Frau, die Stille als Stil tr&auml;gt.</p>
+      <div class="bag-content">
+        <p class="bag-category">CLINE Bags</p>
+        <h3 class="bag-title">Ros&eacute; Ribbon</h3>
+        <p class="bag-description" data-de="Sanftes Ros&eacute; trifft auf skulpturale Textur. F&uuml;r die Frau, die Stille als Stil tr&auml;gt." data-en="Soft rose meets sculptural texture. For the woman who wears stillness as style.">Sanftes Ros&eacute; trifft auf skulpturale Textur. F&uuml;r die Frau, die Stille als Stil tr&auml;gt.</p>
         <div class="bag-tags"><span class="bag-tag" data-de="Handmade" data-en="Handmade">Handmade</span><span class="bag-tag" data-de="Slow Fashion" data-en="Slow Fashion">Slow Fashion</span></div>
-        <a href="https://wa.link/jio7fs" target="_blank" rel="noopener" class="bag-btn" data-de="Anfragen" data-en="Request Piece">Anfragen</a>
+        <div class="bag-footer">
+          <span class="bag-price">ab 89 EUR</span>
+          <a href="https://wa.link/jio7fs" target="_blank" rel="noopener" class="bag-btn" data-de="Anfragen" data-en="Request Piece">Anfragen</a>
+        </div>
       </div>
     </div>
 
     <div class="bag-card">
-      <div class="bag-img-wrap">
+      <div class="bag-image">
         <img src="https://res.cloudinary.com/dqje367sj/image/upload/v1779056371/7506AC42-83E4-4899-A957-1A6DE53D3154_kvth43.png" alt="Olive Drift Bag" loading="lazy">
       </div>
-      <div class="bag-info">
-        <h3 class="bag-name">Olive Drift</h3>
-        <p class="bag-desc" data-de="Geerdet, r&auml;tselhaft und unaufgeregt sch&ouml;n. Olive f&uuml;r den Alltag mit Tiefe." data-en="Grounded, quiet and effortlessly beautiful. Olive for everyday depth.">Geerdet, r&auml;tselhaft und unaufgeregt sch&ouml;n. Olive f&uuml;r den Alltag mit Tiefe.</p>
+      <div class="bag-content">
+        <p class="bag-category">CLINE Bags</p>
+        <h3 class="bag-title">Olive Drift</h3>
+        <p class="bag-description" data-de="Geerdet, r&auml;tselhaft und unaufgeregt sch&ouml;n. Olive f&uuml;r den Alltag mit Tiefe." data-en="Grounded, quiet and effortlessly beautiful. Olive for everyday depth.">Geerdet, r&auml;tselhaft und unaufgeregt sch&ouml;n. Olive f&uuml;r den Alltag mit Tiefe.</p>
         <div class="bag-tags"><span class="bag-tag" data-de="Handmade" data-en="Handmade">Handmade</span><span class="bag-tag" data-de="Slow Fashion" data-en="Slow Fashion">Slow Fashion</span></div>
-        <a href="https://wa.link/jio7fs" target="_blank" rel="noopener" class="bag-btn" data-de="Anfragen" data-en="Request Piece">Anfragen</a>
+        <div class="bag-footer">
+          <span class="bag-price">ab 89 EUR</span>
+          <a href="https://wa.link/jio7fs" target="_blank" rel="noopener" class="bag-btn" data-de="Anfragen" data-en="Request Piece">Anfragen</a>
+        </div>
       </div>
     </div>
 
     <div class="bag-card">
-      <div class="bag-img-wrap">
+      <div class="bag-image">
         <img src="https://res.cloudinary.com/dqje367sj/image/upload/v1779056371/5DC44F46-6123-44CD-97A6-6DDE4C8047A3_rcq30u.png" alt="Autumn Mosaic Bag" loading="lazy">
       </div>
-      <div class="bag-info">
-        <h3 class="bag-name">Autumn Mosaic</h3>
-        <p class="bag-desc" data-de="Ein Farbspiel wie ein sp&auml;ter Herbstnachmittag. Warm, vielf&auml;ltig und zeitlos." data-en="A palette like a late autumn afternoon. Warm, layered and timeless.">Ein Farbspiel wie ein sp&auml;ter Herbstnachmittag. Warm, vielf&auml;ltig und zeitlos.</p>
+      <div class="bag-content">
+        <p class="bag-category">CLINE Bags</p>
+        <h3 class="bag-title">Autumn Mosaic</h3>
+        <p class="bag-description" data-de="Ein Farbspiel wie ein sp&auml;ter Herbstnachmittag. Warm, vielf&auml;ltig und zeitlos." data-en="A palette like a late autumn afternoon. Warm, layered and timeless.">Ein Farbspiel wie ein sp&auml;ter Herbstnachmittag. Warm, vielf&auml;ltig und zeitlos.</p>
         <div class="bag-tags"><span class="bag-tag" data-de="Handmade" data-en="Handmade">Handmade</span><span class="bag-tag" data-de="Slow Fashion" data-en="Slow Fashion">Slow Fashion</span></div>
-        <a href="https://wa.link/jio7fs" target="_blank" rel="noopener" class="bag-btn" data-de="Anfragen" data-en="Request Piece">Anfragen</a>
+        <div class="bag-footer">
+          <span class="bag-price">ab 89 EUR</span>
+          <a href="https://wa.link/jio7fs" target="_blank" rel="noopener" class="bag-btn" data-de="Anfragen" data-en="Request Piece">Anfragen</a>
+        </div>
       </div>
     </div>
 
     <div class="bag-card">
-      <div class="bag-img-wrap">
+      <div class="bag-image">
+        <span class="bag-badge" data-de="Neu" data-en="New">Neu</span>
         <img src="https://res.cloudinary.com/dqje367sj/image/upload/v1779056371/D66F4CF8-AB49-4FCB-93DF-1D888764DC14_xaqd7t.png" alt="Berry Pop Bag" loading="lazy">
       </div>
-      <div class="bag-info">
-        <h3 class="bag-name">Berry Pop</h3>
-        <p class="bag-desc" data-de="K&uuml;hn und feminin. Eine Beere f&uuml;r den Moment, in dem du aufgefallen sein m&ouml;chtest." data-en="Bold and feminine. A berry for the moment you want to be seen.">K&uuml;hn und feminin. Eine Beere f&uuml;r den Moment, in dem du aufgefallen sein m&ouml;chtest.</p>
+      <div class="bag-content">
+        <p class="bag-category">CLINE Bags</p>
+        <h3 class="bag-title">Berry Pop</h3>
+        <p class="bag-description" data-de="K&uuml;hn und feminin. Eine Beere f&uuml;r den Moment, in dem du aufgefallen sein m&ouml;chtest." data-en="Bold and feminine. A berry for the moment you want to be seen.">K&uuml;hn und feminin. Eine Beere f&uuml;r den Moment, in dem du aufgefallen sein m&ouml;chtest.</p>
         <div class="bag-tags"><span class="bag-tag" data-de="Handmade" data-en="Handmade">Handmade</span><span class="bag-tag" data-de="Slow Fashion" data-en="Slow Fashion">Slow Fashion</span></div>
-        <a href="https://wa.link/jio7fs" target="_blank" rel="noopener" class="bag-btn" data-de="Anfragen" data-en="Request Piece">Anfragen</a>
+        <div class="bag-footer">
+          <span class="bag-price">ab 89 EUR</span>
+          <a href="https://wa.link/jio7fs" target="_blank" rel="noopener" class="bag-btn" data-de="Anfragen" data-en="Request Piece">Anfragen</a>
+        </div>
       </div>
     </div>
 
     <div class="bag-card">
-      <div class="bag-img-wrap">
+      <div class="bag-image">
         <img src="https://res.cloudinary.com/dqje367sj/image/upload/v1779056371/AB6F368C-EB9A-4B79-B49B-2462F83434B8_xzzmqo.png" alt="Sunset Sorbet Bag" loading="lazy">
       </div>
-      <div class="bag-info">
-        <h3 class="bag-name">Sunset Sorbet</h3>
-        <p class="bag-desc" data-de="Weich wie die letzte Stunde des Lichts. Ein Sommergef&uuml;hl, das bleibt." data-en="Soft as the last hour of light. A summer feeling that stays.">Weich wie die letzte Stunde des Lichts. Ein Sommergef&uuml;hl, das bleibt.</p>
+      <div class="bag-content">
+        <p class="bag-category">CLINE Bags</p>
+        <h3 class="bag-title">Sunset Sorbet</h3>
+        <p class="bag-description" data-de="Weich wie die letzte Stunde des Lichts. Ein Sommergef&uuml;hl, das bleibt." data-en="Soft as the last hour of light. A summer feeling that stays.">Weich wie die letzte Stunde des Lichts. Ein Sommergef&uuml;hl, das bleibt.</p>
         <div class="bag-tags"><span class="bag-tag" data-de="Handmade" data-en="Handmade">Handmade</span><span class="bag-tag" data-de="Slow Fashion" data-en="Slow Fashion">Slow Fashion</span></div>
-        <a href="https://wa.link/jio7fs" target="_blank" rel="noopener" class="bag-btn" data-de="Anfragen" data-en="Request Piece">Anfragen</a>
+        <div class="bag-footer">
+          <span class="bag-price">ab 89 EUR</span>
+          <a href="https://wa.link/jio7fs" target="_blank" rel="noopener" class="bag-btn" data-de="Anfragen" data-en="Request Piece">Anfragen</a>
+        </div>
       </div>
     </div>
 
     <div class="bag-card">
-      <div class="bag-img-wrap">
+      <div class="bag-image">
         <img src="https://res.cloudinary.com/dqje367sj/image/upload/v1779056371/B56C89A9-55F4-45C1-B8A8-3B046B431ACA_wconir.png" alt="Noir Sand Bag" loading="lazy">
       </div>
-      <div class="bag-info">
-        <h3 class="bag-name">Noir Sand</h3>
-        <p class="bag-desc" data-de="Dunkel wie Mitternacht, warm wie Sand. Die Stille des Kontrasts." data-en="Dark as midnight, warm as sand. The quiet of contrast.">Dunkel wie Mitternacht, warm wie Sand. Die Stille des Kontrasts.</p>
+      <div class="bag-content">
+        <p class="bag-category">CLINE Bags</p>
+        <h3 class="bag-title">Noir Sand</h3>
+        <p class="bag-description" data-de="Dunkel wie Mitternacht, warm wie Sand. Die Stille des Kontrasts." data-en="Dark as midnight, warm as sand. The quiet of contrast.">Dunkel wie Mitternacht, warm wie Sand. Die Stille des Kontrasts.</p>
         <div class="bag-tags"><span class="bag-tag" data-de="Handmade" data-en="Handmade">Handmade</span><span class="bag-tag" data-de="Slow Fashion" data-en="Slow Fashion">Slow Fashion</span></div>
-        <a href="https://wa.link/jio7fs" target="_blank" rel="noopener" class="bag-btn" data-de="Anfragen" data-en="Request Piece">Anfragen</a>
+        <div class="bag-footer">
+          <span class="bag-price">ab 89 EUR</span>
+          <a href="https://wa.link/jio7fs" target="_blank" rel="noopener" class="bag-btn" data-de="Anfragen" data-en="Request Piece">Anfragen</a>
+        </div>
       </div>
     </div>
 
     <div class="bag-card">
-      <div class="bag-img-wrap">
+      <div class="bag-image">
         <img src="https://res.cloudinary.com/dqje367sj/image/upload/v1779056371/AA2B468D-28A4-44ED-9E96-07F4023AC0A5_yw3vj8.png" alt="Bordeaux Mini Bag" loading="lazy">
       </div>
-      <div class="bag-info">
-        <h3 class="bag-name">Bordeaux Mini</h3>
-        <p class="bag-desc" data-de="Klein, aber mit einer Haltung, die f&uuml;llt. Bordeaux f&uuml;r den Abend, der bleibt." data-en="Small, but with a presence that fills a room. Bordeaux for the evening that lingers.">Klein, aber mit einer Haltung, die f&uuml;llt. Bordeaux f&uuml;r den Abend, der bleibt.</p>
-        <div class="bag-tags"><span class="bag-tag" data-de="Handmade" data-en="Handmade">Handmade</span><span class="bag-tag" data-de="Slow Fashion" data-en="Slow Fashion">Slow Fashion</span></div>
-        <a href="https://wa.link/jio7fs" target="_blank" rel="noopener" class="bag-btn" data-de="Anfragen" data-en="Request Piece">Anfragen</a>
+      <div class="bag-content">
+        <p class="bag-category">CLINE Bags — Mini</p>
+        <h3 class="bag-title">Bordeaux Mini</h3>
+        <p class="bag-description" data-de="Klein, aber mit einer Haltung, die f&uuml;llt. Bordeaux f&uuml;r den Abend, der bleibt." data-en="Small, but with a presence that fills a room. Bordeaux for the evening that lingers.">Klein, aber mit einer Haltung, die f&uuml;llt. Bordeaux f&uuml;r den Abend, der bleibt.</p>
+        <div class="bag-tags"><span class="bag-tag" data-de="Handmade" data-en="Handmade">Handmade</span><span class="bag-tag">Mini</span></div>
+        <div class="bag-footer">
+          <span class="bag-price">ab 69 EUR</span>
+          <a href="https://wa.link/jio7fs" target="_blank" rel="noopener" class="bag-btn" data-de="Anfragen" data-en="Request Piece">Anfragen</a>
+        </div>
       </div>
     </div>
 
     <div class="bag-card">
-      <div class="bag-img-wrap">
+      <div class="bag-image">
+        <span class="bag-badge" data-de="Last One" data-en="Last One">Last One</span>
         <img src="https://res.cloudinary.com/dqje367sj/image/upload/v1779056371/E7A88757-AEA5-42CE-9269-08DA26B201E3_eysohd.png" alt="Soft Blush Bag" loading="lazy">
       </div>
-      <div class="bag-info">
-        <h3 class="bag-name">Soft Blush</h3>
-        <p class="bag-desc" data-de="Zart wie eine r&ouml;tliche D&auml;mmerung. F&uuml;r den Tag, an dem du ganz du selbst bist." data-en="Delicate as a rosy dusk. For the day you are entirely yourself.">Zart wie eine r&ouml;tliche D&auml;mmerung. F&uuml;r den Tag, an dem du ganz du selbst bist.</p>
+      <div class="bag-content">
+        <p class="bag-category">CLINE Bags</p>
+        <h3 class="bag-title">Soft Blush</h3>
+        <p class="bag-description" data-de="Zart wie eine r&ouml;tliche D&auml;mmerung. F&uuml;r den Tag, an dem du ganz du selbst bist." data-en="Delicate as a rosy dusk. For the day you are entirely yourself.">Zart wie eine r&ouml;tliche D&auml;mmerung. F&uuml;r den Tag, an dem du ganz du selbst bist.</p>
         <div class="bag-tags"><span class="bag-tag" data-de="Handmade" data-en="Handmade">Handmade</span><span class="bag-tag" data-de="Slow Fashion" data-en="Slow Fashion">Slow Fashion</span></div>
-        <a href="https://wa.link/jio7fs" target="_blank" rel="noopener" class="bag-btn" data-de="Anfragen" data-en="Request Piece">Anfragen</a>
+        <div class="bag-footer">
+          <span class="bag-price">ab 89 EUR</span>
+          <a href="https://wa.link/jio7fs" target="_blank" rel="noopener" class="bag-btn" data-de="Anfragen" data-en="Request Piece">Anfragen</a>
+        </div>
       </div>
     </div>
 
@@ -1274,9 +1379,9 @@ const bagObs=new IntersectionObserver(entries=>{
   entries.forEach(e=>{
     if(e.isIntersecting){e.target.classList.add('visible');bagObs.unobserve(e.target)}
   });
-},{threshold:0.08});
+},{threshold:0.06});
 document.querySelectorAll('.bag-card').forEach((c,i)=>{
-  c.style.transitionDelay=`${i*0.07}s`;
+  c.style.transitionDelay=`${i*0.06}s`;
   bagObs.observe(c);
 });
 
